@@ -73,13 +73,6 @@ function crearEntorno() {
 
 
 function ejecucionRobot() {
-  // console.log(this.entorno.PosEntradaEntorno);
-  /*
-  var destinoPrueba = this.entorno.PosEntradaEntorno; //new PosConDireccion(10,20);
-    console.log(this.robotDepositador.hillClimbing(destinoPrueba));
-    for(var i = 1; i < this.robotDepositador.trayectoria.length; i++)
-        window.setTimeout('this.robotDepositador.caminar(this.robotDepositador.trayectoria[' + i + '].direccion)', i * VENTANA_TIEMPO);
-*/
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar();
   this.robotDepositador.casillaInicioDescarga();
