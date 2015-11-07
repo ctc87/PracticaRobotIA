@@ -294,34 +294,8 @@ text-decoration:none;
 
 #entorno {
     position:relative;
-    left:3%;
+    /*left:30%;*/
     bottom:10px;
-}
-#tituloPrioridades {
-    height:10px;   
-    font-size:80%;
-    padding:5%;
-
-}
-
-#prioridades {    
-    border-radius: 6px 6px 6px 6px;
-    -moz-border-radius: 6px 6px 6px 6px;
-    -webkit-border-radius: 6px 6px 6px 6px;
-    border:solid black 1px;
-    position:absolute;
-    left:88%;
-    width:10%;
-    padding-bottom:20px;
-}
-.cuadroPrioridad {
-    border:solid black 1px;
-    width:10px;
-    height:10px;
-    font-size:60%;
-    position:relative;
-    top:15px;
-    margin-left:42%;
 }
 header {
     width:100%;

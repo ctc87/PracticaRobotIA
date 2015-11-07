@@ -7,20 +7,17 @@
 <meta charset="utf-8" />
 <link href="index_files/favicon.ico" rel="icon" type="image/x-icon" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<script type="text/javascript" src="js/entorno.js"></script>
-<script type="text/javascript" src="js/matrix.js"></script>
+<script type="text/javascript" src="js//matrix.js"></script>
 <script type="text/javascript" src="js/robot.js"></script>
 <script type="text/javascript" src="js/sisNav.js"></script>
 <script type="text/javascript" src="js/menucss.js"></script>
 <script type="text/javascript" src="js/paquete.js"></script>
-<script type="text/javascript" src="js/robotDepositador.js"></script>
-<script type="text/javascript" src="js/robotTransportadorClasificador.js"></script>
-<script type="text/javascript" src="js/robotEmbalizador.js"></script>
 <script type="text/javascript" src="js/posActual.js"></script>
-
+<script type="text/javascript" src="js/entorno_prueba.js"></script>
 <link rel="stylesheet" href="css/styles.css" />
 <link rel="stylesheet" href="css/menu.css" />
 <link rel="shortcut icon" href="/favicon.ico" />
+<a href="#" id="botonCrearEntorno" class="button" onclick="crearEntorno();"/>Crear&nbsp;⚒</a>
 </head>
  
 <body>
@@ -96,11 +93,11 @@
                Fila<input class="inputDatos" value="0" type="text" id="fil"/>
                <p class="parrafosDescripcion">Dimensiones de la matriz</p> 
                Largo<input class="inputDatos" value="100" type="text" id="N"/>
-               Ancho<input class="inputDatos" value="20" type="text" id="M"/>
+               Ancho<input class="inputDatos" value="10" type="text" id="M"/>
                <p class="parrafosDescripcion">Colocaci&oacute;n de obstaculos</p>
                               <div   style="display:none;" id="dis">
                 <p class="parrafosDescripcion">N&uacute;mero obstaculos<P> 
-                <input class="inputDatos" type="text" value="400" id="Obs">
+                <input class="inputDatos" type="text" value="20" id="Obs">
                </div>
                <input id="Autom" type="radio" name="man" value="autom" onChange="mostrarEsconder('dis')" >Autom&aacute;tico
                <input type="radio" name="man" value="manual" onChange="mostrarEsconder('dis')" checked>Manual
@@ -109,23 +106,10 @@
            <a href="#" id="botonCrearEntorno" class="button" onclick="crearEntorno();"/>Crear&nbsp;⚒</a>
            </div>
             <br/>
-           <!--<center>-->
+           <center>
            <div id="entorno" style="display:none">
            </div>
-           <div id="prioridades" style="display:none">
-               <div id="tituloPrioridades">Prioridades</div>
-               <div class="cuadroPrioridad" style="background-color:#99CCFF">1</div>
-               <div class="cuadroPrioridad" style="background-color:#999966">2</div>
-               <div class="cuadroPrioridad" style="background-color:#003300">3</div>
-               <div class="cuadroPrioridad" style="background-color:#663300">4</div>
-               <div class="cuadroPrioridad" style="background-color:#CCCC00">5</div>
-               <div class="cuadroPrioridad" style="background-color:#FF6600">6</div>
-               <div class="cuadroPrioridad" style="background-color:#FF6666">7</div>
-               <div class="cuadroPrioridad" style="background-color:#CC66FF">8</div>
-               <div class="cuadroPrioridad" style="background-color:#00FF99">9</div>
-               <div class="cuadroPrioridad" style="background-color:#00FF00">10</div>
-           </div>
-           <!--</center>-->
+           </center>
            <!--<div id="keys">
                <h4>Movimientos</h4>
                <img src="index_files/wasd.png">

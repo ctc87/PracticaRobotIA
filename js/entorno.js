@@ -3,10 +3,11 @@ var pintado = false;
 var GlobalContador;
 const VENTANA_TIEMPO = 20;
 var contadorGlobalParaPasos = 0;
-PASOS_QUE_SE_RESTAN = 20;
+PASOS_QUE_SE_RESTAN = 30; // 100
+PASOS_QUE_SE_SUMAN = 30; // 100
 
 function crearEntorno() {
-    GlobalContador = 1;
+    GlobalContador = 100;
     //Recogemos los valores con los que se va a inicializar
     this.n = document.getElementById('N').value;
     this.m = document.getElementById('M').value;
@@ -18,6 +19,7 @@ function crearEntorno() {
     //Instanciamos un objeto de tipo POsactual para cada robot
     this.posSalidaRobotDepositador = new PosConDireccion(Math.abs(this.m/2),0);
     this.posSalidaRobotTransportadorClasificador  = new PosConDireccion(Math.abs(this.m/2), Math.abs(this.n/2));
+    this.posSalidaRobotEmbalizador = new PosConDireccion(Math.abs(this.m/2),this.n-1);
     //Comprobamos si ya hay una matriz pintada en nuestra interfaz gráfica
     if(pintado == true) {
       this.entorno.desPintarEntorno(); //si la hay la borramos
@@ -31,7 +33,6 @@ function crearEntorno() {
     // Comprobamos sí la disposición de obstaculos se va hacer de forma manual
     if(this.entorno.manual) { 
         this.entorno.ObstaculosRandom(); // Disponemos los obstaculos de manera aleatoria 
-        console.log("Random")    
     } else {
       /* 
         Si se va hacer de manera manual tenemos que agregar a cada casilla de la interfaz gráfica,
@@ -55,14 +56,17 @@ function crearEntorno() {
     // instanciamos los robots con la posiciones de salida
     this.robotDepositador = new RobotDepositador(this.posSalidaRobotDepositador, this.entorno.arrayDePaquetes); 
     this.robotTransportadorClasificador = new RobotTransportadorClasificador(this.posSalidaRobotTransportadorClasificador, this.entorno.arrayDePaquetes); 
+    this.robotEmbalizador = new RobotEmbalizador(this.posSalidaRobotEmbalizador); 
     
     // insertamos la matriz de entorno en el objeto navegador, que es un atributo del robot, a traves del metodo leerTerrenoEnNavegadpor()
     this.robotDepositador.leerTerrenoEnNavegadpor(this.m, this.n, this.entorno.matrizEntorno);
     this.robotTransportadorClasificador.leerTerrenoEnNavegadpor(this.m, this.n, this.entorno.matrizEntorno);
+    this.robotEmbalizador.leerTerrenoEnNavegadpor(this.m, this.n, this.entorno.matrizEntorno);
     
     // actualizamos el navegador para que compruebe los obstaculos en las direcciónes en las que puede moverse el robot
     this.robotDepositador.actualizarNavegador();
     this.robotTransportadorClasificador.actualizarNavegador();
+    this.robotEmbalizador.actualizarNavegador();
     // activamos el evnto que permirte mover el robot con las teclas w,a,s,d pertenece a la parte de desarrollo
     document.onkeypress = manejador;
     
@@ -75,32 +79,79 @@ function crearEntorno() {
 function ejecucionRobot() {
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar();
+  GlobalContador += PASOS_QUE_SE_SUMAN;
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar();
+  GlobalContador += PASOS_QUE_SE_SUMAN;
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar()
+  GlobalContador += PASOS_QUE_SE_SUMAN;
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar();
+  GlobalContador += PASOS_QUE_SE_SUMAN;
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar()
+  GlobalContador += PASOS_QUE_SE_SUMAN;
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar();
+  GlobalContador += PASOS_QUE_SE_SUMAN;
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar();
+  GlobalContador += PASOS_QUE_SE_SUMAN;
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar();
+  GlobalContador += PASOS_QUE_SE_SUMAN;
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar();
+  GlobalContador += PASOS_QUE_SE_SUMAN;
   this.robotDepositador.casillaInicioDescarga();
   this.robotDepositador.buscarCasillaParaDepositar();
   GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
   this.robotTransportadorClasificador.ordenarArrayCajasPorPrioridad();
-  var final = this.entorno.arrayDePaquetes.length
-  console.log(this.entorno.arrayDePaquetes);
-  for(var i = 0; i < final; i++) {
+  for(var i = 0; i < this.entorno.arrayDePaquetes.length; i++) {
     this.robotTransportadorClasificador.recogerCajas(i);
-    this.robotTransportadorClasificador.depositarCajasOrdenadas();
+    this.robotTransportadorClasificador.depositarCajasOrdenadas(i);
   }
+  this.robotTransportadorClasificador.volverASuPuesto();
+  
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN;
+  GlobalContador -= PASOS_QUE_SE_RESTAN
+  this.robotTransportadorClasificador.volverASuPuesto();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
+  this.robotEmbalizador.recogerUnaCaja();
+  this.robotEmbalizador.embalizar();
 }
 
 //Esta función permite mostrar o esconder un elmento html a traves de su id
@@ -261,15 +312,17 @@ $('document').ready(function() {
     $('#divObs').hide(1000);
     $('#entorno').hide(1000);
     $('#divInicio').hide(1000);
+    $('#prioridades').hide(1000);
     
   });  
   
   $("#botonInstruciones").on( "click", function() {	 
     $('#divDatosMatriz').hide(1000);
-    $('#divExplicacion').show(1000);
+    $('#divExplicacion').hide(1000);
     $('#divObs').hide(1000);
     $('#entorno').hide(1000);
     $('#divInicio').hide(1000);
+    $('#prioridades').hide(1000);
     
   });  
   
@@ -278,7 +331,8 @@ $('document').ready(function() {
     $('#divExplicacion').hide(1000);
     $('#divObs').hide(1000);
     $('#entorno').hide(1000);
-    $('#divInicio').show(1000);       
+    $('#divInicio').show(1000);  
+    $('#prioridades').hide(1000);     
   });
   
   
@@ -287,6 +341,8 @@ $('document').ready(function() {
     $('#entorno').show(1000);
     $('#divInicio').hide(1000);
     $('footer').hide(1000);
+    $('#prioridades').show(1000);
+
   }); 
   
 

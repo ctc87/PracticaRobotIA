@@ -1,18 +1,20 @@
 
 // Esta es la calse del robot que transporta los paquetes y los clasifica por prioridad
 function RobotTransportadorClasificador(PosMitadEntorno, arrayDePaquetes) {
-  aux = new PosConDireccion(PosMitadEntorno.n, PosMitadEntorno.m)
-  Robot.call(this, aux);
-  Robot.call(this, PosMitadEntorno);
+  this.posActualrobot  = new PosConDireccion(PosMitadEntorno.n, PosMitadEntorno.m)
+  this.suLugar =  new PosConDireccion(PosMitadEntorno.n, PosMitadEntorno.m);
+  Robot.call(this, this.posActualrobot);
   // this.caja;
   this.arrayDePaquetes = arrayDePaquetes;
 
 };
+
 // Creamos el objeto RobotTransportadorClasificador.prototype que hereda desde Robot.prototype
 // Nota: Un error común es utilizar "new Robot()" para crear RobotTransportadorClasificador.prototype 
 // Esto es incorrecto por varias razones, y no menos importante, nosotros no le estamos pasando nada
 // a Robot desde el argumento "PosSalida". El lugar correcto para llamar a Robot
 // es arriba, donde nosotros llamamos a RobotTransportadorClasificador.
+
 RobotTransportadorClasificador.prototype = Object.create(Robot.prototype);
 // Establecer la propiedad "constructor" para referencias  a RobotTransportadorClasificador
 RobotTransportadorClasificador.prototype.constructor = RobotTransportadorClasificador;
@@ -57,7 +59,7 @@ this.arrayDePaquetes.sort(function (a, b) {
 
 RobotTransportadorClasificador.prototype.casillaFinalDescargas = function() {
   this.trayectoria = [this.PosActual];
-  var posicionDestino = new PosConDireccion(0, this.Navegador.mapa[0].length - 4);
+  var posicionDestino = new PosConDireccion(0, Math.abs(this.Navegador.mapa[0].length/2 + 4));
   while(this.Navegador.mapa[posicionDestino.n][posicionDestino.m] != 0) { 
       posicionDestino.n++;
   }
@@ -65,9 +67,9 @@ RobotTransportadorClasificador.prototype.casillaFinalDescargas = function() {
 }
 
 
-RobotTransportadorClasificador.prototype.depositarCajasOrdenadas = function() {
+RobotTransportadorClasificador.prototype.depositarCajasOrdenadas = function(it) {
     var posicionDestino = this.casillaFinalDescargas();
-    var auxPaquete = this.arrayDePaquetes.pop();
+    var auxPaquete = this.arrayDePaquetes[it];
     this.trayectoria = this.hillClimbing(posicionDestino);
     var direccion = "";
     var j = 1;
@@ -78,5 +80,17 @@ RobotTransportadorClasificador.prototype.depositarCajasOrdenadas = function() {
     }
     auxPaquete.descargar(this.PosActual);
     this.Navegador.mapa[this.PosActual.n][this.PosActual.m] = auxPaquete.priority + 1
+}
+
+RobotTransportadorClasificador.prototype.volverASuPuesto = function() {
+    var posicionDestino = this.suLugar
+    this.trayectoria = this.hillClimbing(posicionDestino);
+    var direccion = "";
+    var j = 1;
+    while(j < this.trayectoria.length) {
+      direccion = this.trayectoria[j].direccion;
+      this.caminar(direccion);
+      j++
+    }
 }
 

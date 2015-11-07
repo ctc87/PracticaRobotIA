@@ -1,8 +1,10 @@
-<// Definimos el constructor del Robot
+// Definimos el constructor del Robot
 function Robot(_posSalida) {
   this.memoriaColor = 'white';
   this.PosActual = _posSalida;
   this.Navegador
+  this.med_eucliana=0;
+  this.med_manhatan=0;
   // this.posSalidaConDireccion = new PosConDireccion(PosSalida.n,PosSalida.m);
   this.trayectoria = [_posSalida];
   this.memoriaDeEstados = [_posSalida];
@@ -109,6 +111,7 @@ Robot.prototype.hillClimbing = function(destino) {
   var contadorPasoAtras = 1;
   var ultimoNodo = this.trayectoria[this.trayectoria.length - 1];
   while(!ultimoNodo.equal(destino) /*||  k < 50*/) {
+    // med++
     var arrayDeNodos = [];
     
     
@@ -197,4 +200,92 @@ Robot.prototype.FuncionHeuristica  = function(posaEvaluar, destino, opcion) {
     break;
   }
 };
+
+Robot.prototype.hillClimbingEstadistico = function(destino, opcion) {
+  this.trayectoria = [this.PosActual];
+  this.memoriaDeEstados = [this.PosActual];
+  var nodoAux;
+  var option = "euclidiana";
+  // var k = 0; // debug
+  var contadorPasoAtras = 1;
+  var ultimoNodo = this.trayectoria[this.trayectoria.length - 1];
+  while(!ultimoNodo.equal(destino) /*||  k < 50*/) {
+    if(opcion==="eucliana"){
+       this.med_eucliana++
+    }
+    else{
+      this.med_manhatan++;
+    }
+    var arrayDeNodos = [];
+    
+    
+    nodoAux = new PosConDireccion(parseInt(ultimoNodo.n) - 1, parseInt(ultimoNodo.m));
+    nodoAux.direccion = "norte";
+    if(!this.comprobarSiEstadoFueVisitado(nodoAux)) {
+      if(this.comprobarSiEstaLibre(nodoAux)) {
+        arrayDeNodos.push(nodoAux);
+      }
+    }
+    nodoAux = new PosConDireccion(parseInt(ultimoNodo.n) + 1, parseInt(ultimoNodo.m));
+    nodoAux.direccion = "sur";
+    if(!this.comprobarSiEstadoFueVisitado(nodoAux)) {
+      if(this.comprobarSiEstaLibre(nodoAux)) {
+        arrayDeNodos.push(nodoAux);
+      }
+    }    
+    nodoAux = new PosConDireccion(parseInt(ultimoNodo.n), parseInt(ultimoNodo.m) - 1);
+    nodoAux.direccion = "oeste";
+    if(!this.comprobarSiEstadoFueVisitado(nodoAux)) {
+      if(this.comprobarSiEstaLibre(nodoAux)) {
+        arrayDeNodos.push(nodoAux);
+      }
+    }    
+    nodoAux = new PosConDireccion(parseInt(ultimoNodo.n), parseInt(ultimoNodo.m) + 1);
+    nodoAux.direccion = "este";
+    if(!this.comprobarSiEstadoFueVisitado(nodoAux)) {
+      if(this.comprobarSiEstaLibre(nodoAux)) {
+        arrayDeNodos.push(nodoAux);
+      }
+    }
+    // parte para la función heuristica 
+    var menorDistancia = Infinity;
+    var mejorIndice;
+    for(var i = 0; i < arrayDeNodos.length; i++) {
+      if(this.FuncionHeuristica(arrayDeNodos[i], destino, option) < menorDistancia) {
+        menorDistancia = this.FuncionHeuristica(arrayDeNodos[i], destino, option);
+        mejorIndice = i;
+      }
+    }
+    //console.log(arrayDeNodos.length);
+    if(arrayDeNodos.length > 0) {
+      // console.log(arrayDeNodos);
+      this.trayectoria.push(arrayDeNodos[mejorIndice]);
+      this.memoriaDeEstados.push(arrayDeNodos[mejorIndice]);
+      ultimoNodo = this.trayectoria[this.trayectoria.length - 1];
+      contadorPasoAtras = 1;
+    } else {     
+      this.trayectoria.pop();
+      ultimoNodo = this.memoriaDeEstados[this.memoriaDeEstados.length - 1 - contadorPasoAtras];
+      // console.log(contadorPasoAtras);
+      contadorPasoAtras++;
+    }
+    // k++;
+    // console.log(this.trayectoria)
+  }
+  
+  return this.trayectoria; 
+};
+  
+  
+  
+ /* Cogemos el nodo inicial y lo metemos en la lista abierta.
+Cogemos de la lista abierta, el nodo con menor valor de F (coste total).
+El elegido (nodo activo) lo pasamos a la lista cerrada.
+Cogemos los nodos vecinos del nodo activo y con cada uno hacemos lo siguiente:
+– Si no está en la lista abierta: Lo metemos, le ponemos como padre el nodo activo y le calculamos los valores de G, H y F.
+– Si ya está en la lista abierta: Verificamos si el camino por el que acabamos de llegar es mejor que el camino por el que llegamos anteriormente. Para eso vemos si su G es mejor que la G que le correspondería ahora. Si su G es mayor que la nueva G, es que el camino actual es mejor, así que le ponemos como padre el nodo activo y le asignamos los nuevos valores de G, H y F.
+Si alguno de los nodos del punto 4 era el nodo final, hemos terminado.
+Si quedan nodos en la lista abierta, volvemos al punto 2
+Si no quedan nodos en la lista abierta y no hemos llegado al final, el destino es inalcanzable. 
+*/  
 

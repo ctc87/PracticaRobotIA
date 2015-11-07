@@ -3,7 +3,6 @@ function RobotDepositador(posSalidaEntorno, arrayDePaquetes) {
   Robot.call(this, aux);
   this.caja;
   this.posSalidaEntorno = posSalidaEntorno;
-  console.log(this.posSalidaEntorno)
   this.arrayDePaquetes = arrayDePaquetes;
 
 };

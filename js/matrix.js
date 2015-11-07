@@ -57,7 +57,6 @@ Entorno.prototype.pintarEntorno = function() {
         else if(i == this.PosSalidaEntorno.n && j == this.PosSalidaEntorno.m) {
             aux.setAttribute('style', 'width:' + boxSize + 'px; height:' + boxSize + 'px ; background-Color:black');
             this.matrizEntorno[i][j] = 111;
-            console.log(this.matrizEntorno[i][j]);
         } 
         
         else {
