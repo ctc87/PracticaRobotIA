@@ -3,7 +3,8 @@ var pintado = false;
 var GlobalContador;
 const VENTANA_TIEMPO = 20;
 var contadorGlobalParaPasos = 0;
-PASOS_QUE_SE_RESTAN = 30; // 100
+PASOS_QUE_SE_RESTAN1 = 30; // 100
+PASOS_QUE_SE_RESTAN2 = 150; // 100
 PASOS_QUE_SE_SUMAN = 30; // 100
 
 function crearEntorno() {
@@ -11,8 +12,8 @@ function crearEntorno() {
     //Recogemos los valores con los que se va a inicializar
     this.n = document.getElementById('N').value;
     this.m = document.getElementById('M').value;
-    this.i = document.getElementById('fil').value;
-    this.j = document.getElementById('col').value;
+    this.numeroRemesas = document.getElementById('rem').value;
+    this.numeroPaquetesPorRemesa = document.getElementById('paq').value;
     this.obs = document.getElementById('Obs').value;
     this.am = document.getElementById("Autom").checked
     
@@ -77,81 +78,56 @@ function crearEntorno() {
 
 
 function ejecucionRobot() {
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar();
-  GlobalContador += PASOS_QUE_SE_SUMAN;
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar();
-  GlobalContador += PASOS_QUE_SE_SUMAN;
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar()
-  GlobalContador += PASOS_QUE_SE_SUMAN;
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar();
-  GlobalContador += PASOS_QUE_SE_SUMAN;
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar()
-  GlobalContador += PASOS_QUE_SE_SUMAN;
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar();
-  GlobalContador += PASOS_QUE_SE_SUMAN;
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar();
-  GlobalContador += PASOS_QUE_SE_SUMAN;
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar();
-  GlobalContador += PASOS_QUE_SE_SUMAN;
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar();
-  GlobalContador += PASOS_QUE_SE_SUMAN;
-  this.robotDepositador.casillaInicioDescarga();
-  this.robotDepositador.buscarCasillaParaDepositar();
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  this.robotTransportadorClasificador.ordenarArrayCajasPorPrioridad();
-  for(var i = 0; i < this.entorno.arrayDePaquetes.length; i++) {
-    this.robotTransportadorClasificador.recogerCajas(i);
-    this.robotTransportadorClasificador.depositarCajasOrdenadas(i);
-  }
-  this.robotTransportadorClasificador.volverASuPuesto();
+  for(var i = 0; i < this.numeroRemesas; i++) {
+    while(this.entorno.arrayDePaquetes.length != 0)
+      this.entorno.arrayDePaquetes.pop();
+    for(var j = 0; j < this.numeroPaquetesPorRemesa; j++) {
+      this.robotDepositador.casillaInicioDescarga();
+      this.robotDepositador.buscarCasillaParaDepositar();
+      GlobalContador += PASOS_QUE_SE_SUMAN;
+    }
+    GlobalContador -= PASOS_QUE_SE_RESTAN1;
+    this.robotTransportadorClasificador.ordenarArrayCajasPorPrioridad();
+    for(var j = 0; j < this.entorno.arrayDePaquetes.length; j++) {
+      this.robotTransportadorClasificador.recogerCajas(j);
+      this.robotTransportadorClasificador.depositarCajasOrdenadas(j);
+    }
+    this.robotTransportadorClasificador.volverASuPuesto();
+    GlobalContador -= PASOS_QUE_SE_RESTAN2
+    for(var j = 0; j < this.numeroPaquetesPorRemesa; j++) {
+    this.robotEmbalizador.recogerUnaCaja();  
+    this.robotEmbalizador.embalizar();
+
+    }
+    GlobalContador -= PASOS_QUE_SE_RESTAN2 * 3;
   
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN;
-  GlobalContador -= PASOS_QUE_SE_RESTAN
-  this.robotTransportadorClasificador.volverASuPuesto();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
-  this.robotEmbalizador.recogerUnaCaja();
-  this.robotEmbalizador.embalizar();
+  }
+  
+  
+  
+  
+  // GlobalContador -= PASOS_QUE_SE_RESTAN;
+  // GlobalContador -= PASOS_QUE_SE_RESTAN
+ 
+  // this.robotEmbalizador.embalizar();
+  // this.robotEmbalizador.recogerUnaCaja();
+  // this.robotEmbalizador.embalizar();
+  // this.robotEmbalizador.recogerUnaCaja();
+  // this.robotEmbalizador.embalizar();
+  // this.robotEmbalizador.recogerUnaCaja();
+  // this.robotEmbalizador.embalizar();
+  // this.robotEmbalizador.recogerUnaCaja();
+  // this.robotEmbalizador.embalizar();
+  // this.robotEmbalizador.recogerUnaCaja();
+  // this.robotEmbalizador.embalizar();
+  // this.robotEmbalizador.recogerUnaCaja();
+  // this.robotEmbalizador.embalizar();
+  // this.robotEmbalizador.recogerUnaCaja();
+  // this.robotEmbalizador.embalizar();
+  // this.robotEmbalizador.recogerUnaCaja();
+  // this.robotEmbalizador.embalizar();
+  // this.robotEmbalizador.recogerUnaCaja();
+  // this.robotEmbalizador.embalizar();
 }
 
 //Esta función permite mostrar o esconder un elmento html a traves de su id
