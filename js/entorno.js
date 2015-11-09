@@ -2,7 +2,7 @@
 // variables globales y constantes
 var pintado = false;
 var GlobalContador;
-const VENTANA_TIEMPO = 20;
+const VENTANA_TIEMPO = 35;
 var CALIBRADOR , PASOS_QUE_SE_RESTAN1, PASOS_QUE_SE_RESTAN2, PASOS_QUE_SE_SUMAN;
 var contadorGlobalParaPasos = 0;
 
@@ -17,9 +17,12 @@ function crearEntorno() {
     this.obs = document.getElementById('Obs').value;
     this.am = document.getElementById("Autom").checked
     CALIBRADOR =  document.getElementById('M').value;
-    PASOS_QUE_SE_RESTAN1 = 30 * CALIBRADOR / 100;
-    PASOS_QUE_SE_RESTAN2 = 150 * CALIBRADOR / 100;
-    PASOS_QUE_SE_SUMAN = 30 * CALIBRADOR / 100;
+    PASOS_QUE_SE_RESTAN1 = CALIBRADOR * 0.3;// * CALIBRADOR / 100;
+    if(this.numeroPaquetesPorRemesa != 1)
+      PASOS_QUE_SE_RESTAN2 = CALIBRADOR * 1.5; // * CALIBRADOR / 100;
+    else
+      PASOS_QUE_SE_RESTAN2 = CALIBRADOR * 0.4;
+    PASOS_QUE_SE_SUMAN = CALIBRADOR * 0.3; //  CALIBRADOR / 100;
     //Instanciamos un objeto de tipo POsactual para cada robot
     this.posSalidaRobotDepositador = new PosConDireccion(Math.abs(this.m/2),0);
     this.posSalidaRobotTransportadorClasificador  = new PosConDireccion(Math.abs(this.m/2), Math.abs(this.n/2));
@@ -90,14 +93,14 @@ function ejecucionRobot() {
       this.robotDepositador.buscarCasillaParaDepositar();
       GlobalContador += PASOS_QUE_SE_SUMAN;
     }
-    GlobalContador -= PASOS_QUE_SE_RESTAN1 * 2;
+    GlobalContador -= PASOS_QUE_SE_RESTAN1 * 1.5;
     this.robotTransportadorClasificador.ordenarArrayCajasPorPrioridad();
     for(var j = 0; j < this.entorno.arrayDePaquetes.length; j++) {
       this.robotTransportadorClasificador.recogerCajas(j);
       this.robotTransportadorClasificador.depositarCajasOrdenadas(j);
     }
     this.robotTransportadorClasificador.volverASuPuesto();
-    GlobalContador -= PASOS_QUE_SE_RESTAN2 * 8
+    GlobalContador -= PASOS_QUE_SE_RESTAN2;
     for(var j = 0; j < this.numeroPaquetesPorRemesa; j++) {
     this.robotEmbalizador.recogerUnaCaja();  
     this.robotEmbalizador.embalizar();
