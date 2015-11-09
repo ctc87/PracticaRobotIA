@@ -110,15 +110,17 @@ Entorno.prototype.ObstaculosRandom = function(){
 };
 
 
+
 Entorno.prototype.ObstaculosRandomEstadistica = function(){
     var aux = this.numObstaculos;
+    // console.log(aux)
     while(aux > 0) {
-        var i = Math.floor((Math.random() * this.m) + 1) - 1;
-        var j = Math.floor((Math.random() * this.n) + 1) - 1;
-        if(this.matrizEntorno[i][j] == 0){
-            this.matrizEntorno[i][j] = 1;
+        var ii = Math.floor((Math.random() * this.m) + 1) - 1;
+        var jj = Math.floor((Math.random() * this.n) + 1) - 1;
+        if(this.matrizEntorno[ii][jj] == 0){
+            this.matrizEntorno[ii][jj] = 1;
             aux--;
         }
     }
-};
+}
 

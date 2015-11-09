@@ -1,12 +1,12 @@
-//El entorno es nuestra interfaz todo lo que veremos
+
+// variables globales y constantes
 var pintado = false;
 var GlobalContador;
 const VENTANA_TIEMPO = 20;
+var CALIBRADOR , PASOS_QUE_SE_RESTAN1, PASOS_QUE_SE_RESTAN2, PASOS_QUE_SE_SUMAN;
 var contadorGlobalParaPasos = 0;
-PASOS_QUE_SE_RESTAN1 = 30; // 100
-PASOS_QUE_SE_RESTAN2 = 150; // 100
-PASOS_QUE_SE_SUMAN = 30; // 100
 
+//El entorno es nuestra interfaz todo lo que veremos
 function crearEntorno() {
     GlobalContador = 100;
     //Recogemos los valores con los que se va a inicializar
@@ -16,7 +16,10 @@ function crearEntorno() {
     this.numeroPaquetesPorRemesa = document.getElementById('paq').value;
     this.obs = document.getElementById('Obs').value;
     this.am = document.getElementById("Autom").checked
-    
+    CALIBRADOR =  document.getElementById('M').value;
+    PASOS_QUE_SE_RESTAN1 = 30 * CALIBRADOR / 100;
+    PASOS_QUE_SE_RESTAN2 = 150 * CALIBRADOR / 100;
+    PASOS_QUE_SE_SUMAN = 30 * CALIBRADOR / 100;
     //Instanciamos un objeto de tipo POsactual para cada robot
     this.posSalidaRobotDepositador = new PosConDireccion(Math.abs(this.m/2),0);
     this.posSalidaRobotTransportadorClasificador  = new PosConDireccion(Math.abs(this.m/2), Math.abs(this.n/2));
@@ -68,7 +71,7 @@ function crearEntorno() {
     this.robotDepositador.actualizarNavegador();
     this.robotTransportadorClasificador.actualizarNavegador();
     this.robotEmbalizador.actualizarNavegador();
-    // activamos el evnto que permirte mover el robot con las teclas w,a,s,d pertenece a la parte de desarrollo
+    // activamos el evento que permirte mover el robot con las teclas w,a,s,d pertenece a la parte de desarrollo
     document.onkeypress = manejador;
     
     if(this.entorno.manual) {
@@ -76,6 +79,7 @@ function crearEntorno() {
     }
 }
 
+// Función que ejecuta los robots mediante las opciones tomadas por el usuario
 
 function ejecucionRobot() {
   for(var i = 0; i < this.numeroRemesas; i++) {
@@ -86,48 +90,23 @@ function ejecucionRobot() {
       this.robotDepositador.buscarCasillaParaDepositar();
       GlobalContador += PASOS_QUE_SE_SUMAN;
     }
-    GlobalContador -= PASOS_QUE_SE_RESTAN1;
+    GlobalContador -= PASOS_QUE_SE_RESTAN1 * 2;
     this.robotTransportadorClasificador.ordenarArrayCajasPorPrioridad();
     for(var j = 0; j < this.entorno.arrayDePaquetes.length; j++) {
       this.robotTransportadorClasificador.recogerCajas(j);
       this.robotTransportadorClasificador.depositarCajasOrdenadas(j);
     }
     this.robotTransportadorClasificador.volverASuPuesto();
-    GlobalContador -= PASOS_QUE_SE_RESTAN2
+    GlobalContador -= PASOS_QUE_SE_RESTAN2 * 8
     for(var j = 0; j < this.numeroPaquetesPorRemesa; j++) {
     this.robotEmbalizador.recogerUnaCaja();  
     this.robotEmbalizador.embalizar();
 
     }
-    GlobalContador -= PASOS_QUE_SE_RESTAN2 * 3;
+    GlobalContador -= PASOS_QUE_SE_RESTAN2 * 30 *  (this.numeroPaquetesPorRemesa /100);
   
   }
   
-  
-  
-  
-  // GlobalContador -= PASOS_QUE_SE_RESTAN;
-  // GlobalContador -= PASOS_QUE_SE_RESTAN
- 
-  // this.robotEmbalizador.embalizar();
-  // this.robotEmbalizador.recogerUnaCaja();
-  // this.robotEmbalizador.embalizar();
-  // this.robotEmbalizador.recogerUnaCaja();
-  // this.robotEmbalizador.embalizar();
-  // this.robotEmbalizador.recogerUnaCaja();
-  // this.robotEmbalizador.embalizar();
-  // this.robotEmbalizador.recogerUnaCaja();
-  // this.robotEmbalizador.embalizar();
-  // this.robotEmbalizador.recogerUnaCaja();
-  // this.robotEmbalizador.embalizar();
-  // this.robotEmbalizador.recogerUnaCaja();
-  // this.robotEmbalizador.embalizar();
-  // this.robotEmbalizador.recogerUnaCaja();
-  // this.robotEmbalizador.embalizar();
-  // this.robotEmbalizador.recogerUnaCaja();
-  // this.robotEmbalizador.embalizar();
-  // this.robotEmbalizador.recogerUnaCaja();
-  // this.robotEmbalizador.embalizar();
 }
 
 //Esta función permite mostrar o esconder un elmento html a traves de su id
@@ -274,6 +253,138 @@ function ObtenerColor(seleccion)  {
         return color;
 };
 
+function estadistica(med_eucliana,med_manhatan){
+    this.med_eucliana=med_eucliana;
+    this.med_manhatan=med_manhatan;
+};
+
+
+function crearEntornoEstadistico() {
+   var robot;
+    var entorno_estadistico;
+    var ArrayEstadistica=new Array();
+    var min_eucliana =Infinity;
+    var min_manhatan=Infinity;
+    var max_eucliana = 0;
+    var max_manhatan =0;
+    var med_eucliana=0;
+    var med_manhatan=0;
+    var NumPruebas=3;
+    
+     for (var j=0;j<NumPruebas;j++){
+       for(var i = 0; i < NumPruebas; i++){
+          ArrayEstadistica[j]= new Array(estadisticaAux);
+       }
+     }  
+     
+    for (var j=1;j<=3;j++){
+       for(var i = 1; i <= 3; i++){
+           var dimension=Math.pow(10,i);
+            var pos_destino = new PosConDireccion(dimension/2,dimension - 1);
+            var posicion = new PosConDireccion(Math.abs(dimension/2),0);
+            var robot=new Robot(posicion);
+                 entorno_estadistico = new Entorno(dimension,dimension, dimension * dimension * 0.05 ,true); 
+                 entorno_estadistico.ObstaculosRandomEstadistica();
+                 robot.leerTerrenoEnNavegadpor(entorno_estadistico.n,entorno_estadistico.m,entorno_estadistico.matrizEntorno);
+            
+            //entorno_estadistico.ObstaculosRandomEstadistica(1); // Disponemos los obstaculos de manera aleatoria 
+            robot.hillClimbingEstadistico(pos_destino,"manhatan");
+            robot.hillClimbingEstadistico(pos_destino,"eucliana");
+            // console.log(robot.hillClimbingEstadistico(pos_destino,"manhatan"));
+            // console.log(robot.hillClimbingEstadistico(pos_destino,"eucliana"));
+            var med_manhatan_unitaria = JSON.parse(JSON.stringify(robot.med_manhatan));
+            var med_eucliana_unitaria = JSON.parse(JSON.stringify(robot.med_eucliana));
+            var estadisticaAux = new estadistica(med_eucliana_unitaria,med_manhatan_unitaria);
+            ArrayEstadistica[j-1][i-1]=estadisticaAux;
+            delete this.entorno_estadistico;
+            delete this.robot; 
+       }
+       }
+        
+  
+    
+    for(var i=0;i<ArrayEstadistica.length;i++){
+        for(var j=0;j<ArrayEstadistica[i].length;j++){
+            
+            if(min_eucliana>ArrayEstadistica[j][i].med_eucliana){
+                // console.log(ArrayEstadistica[j][i].med_eucliana);
+                min_eucliana=ArrayEstadistica[j][i].med_eucliana;
+            }
+            if(max_eucliana<ArrayEstadistica[j][i].med_eucliana){
+                // console.log(ArrayEstadistica[j][i].med_eucliana);
+                max_eucliana=ArrayEstadistica[j][i].med_eucliana;
+            }
+            if(min_manhatan>ArrayEstadistica[j][i].med_manhatan){
+                // console.log(ArrayEstadistica[j][i].med_manhatan);
+                min_manhatan=ArrayEstadistica[j][i].med_manhatan;
+            }
+            if(max_manhatan<ArrayEstadistica[j][i].med_manhatan){
+                // console.log(ArrayEstadistica[j][i].med_manhatan);
+                max_manhatan=ArrayEstadistica[j][i].med_manhatan;
+
+            }
+            med_eucliana+=ArrayEstadistica[j][i].med_eucliana;
+            med_manhatan+=ArrayEstadistica[j][i].med_manhatan;
+        }
+        med_eucliana=med_eucliana/NumPruebas;
+        med_manhatan=med_manhatan/NumPruebas;
+        
+        
+        
+        var capa = document.getElementById("tab" + (i + 1));
+        if(capa.childNodes.length > 0)
+          capa.removeChild(capa.childNodes[0]);
+        var p = document.createElement("p");
+        p.innerHTML = min_manhatan;
+        capa.appendChild(p);
+        
+        var capa2 = document.getElementById("stab" + (i + 1));
+        if(capa2.childNodes.length > 0)
+          capa2.removeChild(capa2.childNodes[0]);
+        var pp = document.createElement("p");
+        pp.innerHTML = max_manhatan;
+        capa2.appendChild(pp);
+        
+        var capa3 = document.getElementById("mtab" + (i + 1));
+        if(capa3.childNodes.length > 0)
+          capa3.removeChild(capa3.childNodes[0]);
+        var ppp = document.createElement("p");
+        ppp.innerHTML = med_manhatan;
+        capa3.appendChild(ppp);
+        
+        var capa = document.getElementById("Etab" + (i + 1));
+        if(capa.childNodes.length > 0)
+          capa.removeChild(capa.childNodes[0]);
+        var p = document.createElement("p");
+        p.innerHTML = min_eucliana;
+        capa.appendChild(p);
+        
+        var capa2 = document.getElementById("Estab" + (i + 1));
+        if(capa2.childNodes.length > 0)
+          capa2.removeChild(capa2.childNodes[0]);
+        var pp = document.createElement("p");
+        pp.innerHTML = max_eucliana;
+        capa2.appendChild(pp);
+        
+        var capa3 = document.getElementById("Emtab" + (i + 1));
+        if(capa3.childNodes.length > 0)
+          capa3.removeChild(capa3.childNodes[0]);
+        var ppp = document.createElement("p");
+        ppp.innerHTML = med_eucliana;
+        capa3.appendChild(ppp);
+        
+        // console.log("prueba de matriz " + i);
+        // console.log ("Minimo Eucliana " + min_eucliana);
+        // console.log("Minimo Manhatan" + min_manhatan);
+        // console.log ("maximo Eucliana " + max_eucliana);
+        // console.log("maximo Manhatan " + max_manhatan);
+        // console.log ("media_Eucliana " + med_eucliana);
+        // console.log("media Manhatan " + med_manhatan);
+        
+    }
+}
+
+// Funciones Jquery para la anicmación de los tags interfaz
 
 $('document').ready(function() {
   
@@ -289,16 +400,18 @@ $('document').ready(function() {
     $('#entorno').hide(1000);
     $('#divInicio').hide(1000);
     $('#prioridades').hide(1000);
+    $('#estadistica').hide(1000);
     
   });  
   
   $("#botonInstruciones").on( "click", function() {	 
     $('#divDatosMatriz').hide(1000);
-    $('#divExplicacion').hide(1000);
+    $('#divExplicacion').show(1000);
     $('#divObs').hide(1000);
     $('#entorno').hide(1000);
     $('#divInicio').hide(1000);
     $('#prioridades').hide(1000);
+    $('#estadistica').hide(1000);
     
   });  
   
@@ -309,6 +422,7 @@ $('document').ready(function() {
     $('#entorno').hide(1000);
     $('#divInicio').show(1000);  
     $('#prioridades').hide(1000);     
+    $('#estadistica').hide(1000);
   });
   
   
@@ -318,10 +432,21 @@ $('document').ready(function() {
     $('#divInicio').hide(1000);
     $('footer').hide(1000);
     $('#prioridades').show(1000);
+    $('#estadistica').hide(1000);
 
   }); 
   
-
+  $("#botonEstadistica").on( "click", function() {	 
+    $('#divDatosMatriz').hide(1000);
+    $('#divExplicacion').hide(1000);
+    $('#divObs').hide(1000);
+    $('#entorno').hide(1000);
+    $('#divInicio').hide(1000);
+    $('#prioridades').hide(1000);
+    $('#estadistica').show(1000);
+    crearEntornoEstadistico();
+    
+  });
 
 
 

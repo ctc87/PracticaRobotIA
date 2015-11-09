@@ -1,5 +1,5 @@
 
-// Esta es la calse del robot que transporta los paquetes y los clasifica por prioridad
+// Esta es la clase del robot que transporta los paquetes y los clasifica por prioridad
 function RobotEmbalizador(posSalidaEntorno) {
   this.posActualrobot  = new PosConDireccion(posSalidaEntorno.n, posSalidaEntorno.m)
   this.suLugar =  new PosConDireccion(posSalidaEntorno.n, posSalidaEntorno.m);
@@ -47,7 +47,7 @@ RobotEmbalizador.prototype.embalizar = function() {
     while(j < this.trayectoria.length) {
       direccion = this.trayectoria[j].direccion;
       this.caminar(direccion);
-      j++
+      j++;
     }
 }
 

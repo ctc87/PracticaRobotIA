@@ -2,7 +2,9 @@
 function Robot(_posSalida) {
   this.memoriaColor = 'white';
   this.PosActual = _posSalida;
-  this.Navegador
+  this.Navegador;
+  this.med_eucliana=0;
+  this.med_manhatan=0;
   // this.posSalidaConDireccion = new PosConDireccion(PosSalida.n,PosSalida.m);
   this.trayectoria = [_posSalida];
   this.memoriaDeEstados = [_posSalida];
@@ -18,7 +20,7 @@ Robot.prototype.leerTerrenoEnNavegadpor = function(n, m, mapa) {
 };
 
 
-// funcion que perimte caminar al robot en una dirección si hay un obstaculo no vanza y devuelve false
+// funcion que perimte caminar al robot en una dirección si hay un obstaculo no avanza y devuelve false
 Robot.prototype.caminar = function(direccion) {
   var puedoCaminar; // variable que se devuelve con resturn que indica si el robot ha caminado o no
   var pos = document.getElementById('div_'+ this.PosActual.n + '_' + this.PosActual.m); // div que equivale a la posicion actual en la interfaz
@@ -189,7 +191,6 @@ Robot.prototype.comprobarSiEstadoFueVisitado = function(nodo) {
 Robot.prototype.FuncionHeuristica  = function(posaEvaluar, destino, opcion) {
   switch(opcion) {
     case "euclidiana":
-        
         return Math.sqrt(Math.pow(parseInt(posaEvaluar.m) - parseInt(destino.m), 2) + Math.pow(parseInt(posaEvaluar.n) - parseInt(destino.n), 2 ));
     break;
     case "manhatan":
@@ -198,3 +199,77 @@ Robot.prototype.FuncionHeuristica  = function(posaEvaluar, destino, opcion) {
   }
 };
 
+Robot.prototype.hillClimbingEstadistico = function(destino, opcion) {
+  this.trayectoria = [this.PosActual];
+  this.memoriaDeEstados = [this.PosActual];
+  var nodoAux;
+  var option = "euclidiana";
+  // var k = 0; // debug
+  var contadorPasoAtras = 1;
+  var ultimoNodo = this.trayectoria[this.trayectoria.length - 1];
+  while(!ultimoNodo.equal(destino) /*||  k < 50*/) {
+    if(opcion==="eucliana"){
+       this.med_eucliana++
+    }
+    else{
+      this.med_manhatan++;
+    }
+    var arrayDeNodos = [];
+    
+    
+    nodoAux = new PosConDireccion(parseInt(ultimoNodo.n) - 1, parseInt(ultimoNodo.m));
+    nodoAux.direccion = "norte";
+    if(!this.comprobarSiEstadoFueVisitado(nodoAux)) {
+      if(this.comprobarSiEstaLibre(nodoAux)) {
+        arrayDeNodos.push(nodoAux);
+      }
+    }
+    nodoAux = new PosConDireccion(parseInt(ultimoNodo.n) + 1, parseInt(ultimoNodo.m));
+    nodoAux.direccion = "sur";
+    if(!this.comprobarSiEstadoFueVisitado(nodoAux)) {
+      if(this.comprobarSiEstaLibre(nodoAux)) {
+        arrayDeNodos.push(nodoAux);
+      }
+    }    
+    nodoAux = new PosConDireccion(parseInt(ultimoNodo.n), parseInt(ultimoNodo.m) - 1);
+    nodoAux.direccion = "oeste";
+    if(!this.comprobarSiEstadoFueVisitado(nodoAux)) {
+      if(this.comprobarSiEstaLibre(nodoAux)) {
+        arrayDeNodos.push(nodoAux);
+      }
+    }    
+    nodoAux = new PosConDireccion(parseInt(ultimoNodo.n), parseInt(ultimoNodo.m) + 1);
+    nodoAux.direccion = "este";
+    if(!this.comprobarSiEstadoFueVisitado(nodoAux)) {
+      if(this.comprobarSiEstaLibre(nodoAux)) {
+        arrayDeNodos.push(nodoAux);
+      }
+    }
+    // parte para la función heuristica 
+    var menorDistancia = Infinity;
+    var mejorIndice;
+    for(var i = 0; i < arrayDeNodos.length; i++) {
+      if(this.FuncionHeuristica(arrayDeNodos[i], destino, option) < menorDistancia) {
+        menorDistancia = this.FuncionHeuristica(arrayDeNodos[i], destino, option);
+        mejorIndice = i;
+      }
+    }
+    //console.log(arrayDeNodos.length);
+    if(arrayDeNodos.length > 0) {
+      // console.log(arrayDeNodos);
+      this.trayectoria.push(arrayDeNodos[mejorIndice]);
+      this.memoriaDeEstados.push(arrayDeNodos[mejorIndice]);
+      ultimoNodo = this.trayectoria[this.trayectoria.length - 1];
+      contadorPasoAtras = 1;
+    } else {     
+      this.trayectoria.pop();
+      ultimoNodo = this.memoriaDeEstados[this.memoriaDeEstados.length - 1 - contadorPasoAtras];
+      // console.log(contadorPasoAtras);
+      contadorPasoAtras++;
+    }
+    // k++;
+    // console.log(this.trayectoria)
+  }
+  
+  return this.trayectoria; 
+};

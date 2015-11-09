@@ -1,7 +1,7 @@
 
 // Esta es la calse del robot que transporta los paquetes y los clasifica por prioridad
 function RobotTransportadorClasificador(PosMitadEntorno, arrayDePaquetes) {
-  this.posActualrobot  = new PosConDireccion(PosMitadEntorno.n, PosMitadEntorno.m)
+  this.posActualrobot  = new PosConDireccion(PosMitadEntorno.n, PosMitadEntorno.m);
   this.suLugar =  new PosConDireccion(PosMitadEntorno.n, PosMitadEntorno.m);
   Robot.call(this, this.posActualrobot);
   // this.caja;
@@ -76,14 +76,14 @@ RobotTransportadorClasificador.prototype.depositarCajasOrdenadas = function(it) 
     while(j < this.trayectoria.length) {
       direccion = this.trayectoria[j].direccion;
       this.caminar(direccion);
-      j++
+      j++;
     }
     auxPaquete.descargar(this.PosActual);
-    this.Navegador.mapa[this.PosActual.n][this.PosActual.m] = auxPaquete.priority + 1
+    this.Navegador.mapa[this.PosActual.n][this.PosActual.m] = auxPaquete.priority + 1;
 }
 
 RobotTransportadorClasificador.prototype.volverASuPuesto = function() {
-    var posicionDestino = this.suLugar
+    var posicionDestino = this.suLugar;
     this.trayectoria = this.hillClimbing(posicionDestino);
     var direccion = "";
     var j = 1;

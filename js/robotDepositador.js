@@ -1,7 +1,11 @@
+/*  La clase RobotDepositador es la que instancia un robot que toma paquetes desde fuera de entorno
+    y los deposita en la tercera linea de la matriz de nuestro almacen 
+*/
+
 function RobotDepositador(posSalidaEntorno, arrayDePaquetes) {
   aux = new PosConDireccion(posSalidaEntorno.n, posSalidaEntorno.m)
   Robot.call(this, aux);
-  this.caja;
+  this.caja; 
   this.posSalidaEntorno = posSalidaEntorno;
   this.arrayDePaquetes = arrayDePaquetes;
 
@@ -50,13 +54,13 @@ RobotDepositador.prototype.buscarCasillaParaDepositar = function() {
 
     this.GenerarObjeto();
     this.trayectoria = this.hillClimbing(posicionDestino);
-    // console.log(this.trayectoria);
+    
     var direccion = "";
       var i = 1;
       while(i < this.trayectoria.length) {
           direccion = this.trayectoria[i].direccion;
           this.caminar(direccion);
-          i++
+          i++;
       }
         this.depositar();
         this.PosActual = this.trayectoria[this.trayectoria.length - 1];
@@ -69,10 +73,6 @@ RobotDepositador.prototype.buscarCasillaParaDepositar = function() {
           this.caminar(direccion);
           j++;
       }
-};
-
-RobotDepositador.prototype.salirEntorno = function(posSalidaEntorno) {
-  // Se puede hacer una ocpion caminar en el switch que se afuera que haga desparacer por unos segundos al robot
 };
 
 RobotDepositador.prototype.depositar = function()  {
