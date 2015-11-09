@@ -34,7 +34,7 @@
                    <li class='active'><a id="botonInicio" href='#'>Home</a></li>
                    <li><a id="botonInstruciones" href='#'>Instrucciones</a></li>
                    <li><a id="botonEmpezar" href='#'>Insertar datos</a></li>
-                   <!--<li><a href='#'>Estad&iacute;sticas</a></li>-->
+                   <li><a id="botonEstadistica" href='#'>Estad&iacute;sticas</a></li>
                 </ul>
             </div>
 
@@ -50,10 +50,10 @@
                    manualmente.
                </p>   
                <p class="parrafoInstrucciones">
-                   Posici&oacute;n de salida del robot: Es la posici&oacute;n en 
-                   la que va empezar nuestro robot dada  por la columna y fila, desde 
-                   0 hasta n y desde 0 hasta m.
-               </p><!-- Es posible que cambie en el desarrollo -->
+                   El n&uacute;mero de paquetes que tiene cada remesa es el n&uacute;mero de paquetes que 
+                   cada robot debe servir, ordenar, transportar por remesa.
+                   El n&uacute;mero de Remesas es el n&uacute;mero de caminones de paquetes llegan a nuestro alamacen 
+               </p>
                <p class="parrafoInstrucciones">
                    Dimensiones de la matriz: Son las dimensiones N(Largo) columnas y M(ancho) filas de nuestro
                    amac&eacute;n 
@@ -72,13 +72,16 @@
                </h2>
                <h3><strong>Integrantes del grupo</strong></h3>
                <p class="parrafoInstrucciones">
-                   <a href="#">Cristina Gonz&aacute;lez Pacheco</a>
+                   <a href="https://github.com/cripache">Cristina Gonz&aacute;lez Pacheco</a>
                </p>   
                <p class="parrafoInstrucciones">
-                   <a href="#">Alberto Sarab&iacute;a Su&aacute;rez</a>
+                   <a href="https://github.com/JogabonitoETSII">Alberto Sarab&iacute;a Su&aacute;rez</a>
                </p>
                <p class="parrafoInstrucciones">
                    <a href="https://github.com/ctc87">Carlos Troyano Carmona</a>
+               </p>
+               <p class="parrafoInstrucciones">
+                   <a href="https://github.com/ctc87/PracticaRobotIA">Repositorio en Github</a>
                </p>
                <div id="divRoboIz">
                    <img src="index_files/roboiz.png"/>
@@ -91,16 +94,16 @@
            <div id="divDatosMatriz">
            <h2>Datos Entorno</h2>
            <form>
-               <p class="parrafosDescripcion">Posici&oacute;n de salida del robot</p> 
-               Columna<input class="inputDatos" value="0" type="text" id="col"/>   
-               Fila<input class="inputDatos" value="0" type="text" id="fil"/>
+               <p class="parrafosDescripcion">Número de remesas de paquetes y de paquetes por remesa</p> 
+               Remesas<input class="inputDatos" value="10" type="text" id="rem"/>   
+               Paquetes<input class="inputDatos" value="3" type="text" id="paq"/>
                <p class="parrafosDescripcion">Dimensiones de la matriz</p> 
                Largo<input class="inputDatos" value="100" type="text" id="N"/>
                Ancho<input class="inputDatos" value="20" type="text" id="M"/>
                <p class="parrafosDescripcion">Colocaci&oacute;n de obstaculos</p>
                               <div   style="display:none;" id="dis">
                 <p class="parrafosDescripcion">N&uacute;mero obstaculos<P> 
-                <input class="inputDatos" type="text" value="400" id="Obs">
+                <input class="inputDatos" type="text" value="200" id="Obs">
                </div>
                <input id="Autom" type="radio" name="man" value="autom" onChange="mostrarEsconder('dis')" >Autom&aacute;tico
                <input type="radio" name="man" value="manual" onChange="mostrarEsconder('dis')" checked>Manual
@@ -109,7 +112,6 @@
            <a href="#" id="botonCrearEntorno" class="button" onclick="crearEntorno();"/>Crear&nbsp;⚒</a>
            </div>
             <br/>
-           <!--<center>-->
            <div id="entorno" style="display:none">
            </div>
            <div id="prioridades" style="display:none">
@@ -125,7 +127,6 @@
                <div class="cuadroPrioridad" style="background-color:#00FF99">9</div>
                <div class="cuadroPrioridad" style="background-color:#00FF00">10</div>
            </div>
-           <!--</center>-->
            <!--<div id="keys">
                <h4>Movimientos</h4>
                <img src="index_files/wasd.png">
@@ -134,11 +135,69 @@
                <p>Pulsa terminar cuando acabes con los obstaculos</p>
                <button onclick="TerminarEventoManual()" class="botonTerminarObstaculos">Terminar</button>
            </div>
-           <!--<div id="divEmpezar" style="display:none">-->
-           <!--    <p>Pulsa empezar</p>-->
-           <!--    <button onclick="ejecucionRobot()" class="botonTerminarObstaculos">Empezar</button>-->
-           <!--</div>-->
            <br/>
+           <div id="estadistica" style="display:none">
+               <p>Estadística de los algorítmos</p>
+               <table>
+                   <tr>
+                       <td>Nº de prueba</td>
+                       <td>Tamaño matriz</td>
+                       <td>Funci&oacute;n heuristica</td>
+                       <td>Nº de comparaciones m&iacute;nimas</td>
+                       <td>Nº de comparaciones m&aacute;ximas</td>
+                       <td>Nº de comparaciones medio</td>
+                   </tr>
+                   <tr>
+                       <td>1</td>
+                       <td>10 x 10</td>
+                       <td>Manhatan</td>
+                       <td id="tab1"></td>
+                       <td id="stab1"></td>
+                       <td id="mtab1"></td>
+                   </tr>
+                   <tr>
+                       <td>1</td>
+                       <td>10 x 10</td>
+                       <td>Eucliana</td>
+                       <td id="Etab1"></td>
+                       <td id="Estab1"></td>
+                       <td id="Emtab1"></td>
+                   </tr>
+                   <tr>
+                       <td>2</td>
+                       <td>100 x 100</td>
+                       <td>Manhatan</td>
+                       <td id="tab2"></td>
+                       <td id="stab2"></td>
+                       <td id="mtab2"></td>
+                   </tr>
+                   <tr>
+                       <td>2</td>
+                       <td>100 x 100</td>
+                       <td>Eucliana</td>
+                       <td id="Etab2"></td>
+                       <td id="Estab2"></td>
+                       <td id="Emtab2"></td>
+                   </tr>
+                   <tr>
+                       <td>3</td>
+                       <td>1000 x 1000</td>
+                       <td>Manhatan</td>
+                       <td id="tab3"></td>
+                       <td id="stab3"></td>
+                       <td id="mtab3"></td>
+                   </tr>
+                   <tr>
+                       <td>3</td>
+                       <td>1000 x 1000</td>
+                       <td>Eucliana</td>
+                       <td id="Etab3"></td>
+                       <td id="Estab3"></td>
+                       <td id="Emtab3"></td>
+                   </tr>
+               </table>
+ 
+           </div>
        </article>
     </section>
     <!--
